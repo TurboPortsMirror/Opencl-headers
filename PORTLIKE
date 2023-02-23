@@ -1,0 +1,32 @@
+#!/bin/sh
+
+    echo "Root check"
+if [ $(whoami) = 'root' ]; then
+    echo "Root is enabled, installing is continued"
+else
+    echo "Root is not enabled, installing is stoped"
+    exit
+fi
+    echo "Checking Dependency"
+if [ $(find /usr/bin/cmake) = '/usr/bin/cmake' ]; then
+    echo "Dependency named 'CMake' is installed, installation is continued"
+else
+    echo "Dependency named 'CMake' is not installed, installation is stoped and dependency is be installed"
+    cd ../Cmake
+    bash ./PORTLIKE
+    cd ../Opencl-headers
+fi
+    echo "Dependencies is installed"
+    echo "Download package process"
+    git clone https://github.com/NothingLinuxMirror/OpenCL-Headers.git
+    echo "Building package"
+    cd ./OpenCL-Headers
+    cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build --target install
+    echo 'Cleaning'
+    cd ..
+    rm -rf ./OpenCL-Headers
+    echo 'Cleaned'
+    echo 'OpenCL-Headers Installed!'
+    
+    
